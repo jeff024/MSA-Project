@@ -66,7 +66,7 @@ def push_signal():
             
             # Build the message with simulated telemetry values.
             Source_Voltage = voltage_source * math.cos(2 * math.pi * x) + (random.random() * 15)
-            Load_Voltage = (voltage_source * math.cos(2 * math.pi * (x + 0.02)) + (random.random() * 15)) / impedance
+            Load_Voltage = (voltage_source * math.cos(2 * math.pi * (x + 0.5)) + (random.random() * 15)) / impedance
             msg_txt_formatted = MSG_TXT.format(Source_Voltage=Source_Voltage, Load_Voltage = Load_Voltage)
             message = Message(msg_txt_formatted)
 
