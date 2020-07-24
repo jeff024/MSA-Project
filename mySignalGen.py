@@ -11,9 +11,10 @@ CONNECTION_STRING = "HostName=myIotHub-jeff.azure-devices.net;DeviceId=myiotdevi
 
 # Define the JSON message to send to IoT Hub.
 voltage_source = 220
-MSG_TXT = '{{"Source_Voltage": {Source_Voltage}}}'
+impedance = 2
+MSG_TXT = '{{"Source_Voltage": {Source_Voltage}, "Load_Voltage": {Load_Voltage}}}'
 
-INTERVAL = 0.0004
+INTERVAL = 0.01
 
 def iothub_client_init():
     # Create an IoT Hub client
@@ -64,8 +65,9 @@ def push_signal():
         while True:
             
             # Build the message with simulated telemetry values.
-            Source_Voltage = voltage_source * math.cos(2 * math.pi * 50 * x) + (random.random() * 15)
-            msg_txt_formatted = MSG_TXT.format(Source_Voltage=Source_Voltage)
+            Source_Voltage = voltage_source * math.cos(2 * math.pi * x) + (random.random() * 15)
+            Load_Voltage = (voltage_source * math.cos(2 * math.pi * (x + 0.02)) + (random.random() * 15)) / impedance
+            msg_txt_formatted = MSG_TXT.format(Source_Voltage=Source_Voltage, Load_Voltage = Load_Voltage)
             message = Message(msg_txt_formatted)
 
             # Send the message.
@@ -73,7 +75,7 @@ def push_signal():
             client.send_message(message)
             print ( "Message successfully sent" )
             time.sleep(INTERVAL)
-			x += INTERVAL
+            x += INTERVAL
 
     except KeyboardInterrupt:
         print ( "Signal Lost" )
